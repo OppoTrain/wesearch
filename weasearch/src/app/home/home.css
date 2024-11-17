@@ -1,0 +1,24 @@
+body {
+    background: url(../../../public/bg.jpg) no-repeat;
+    min-height: 50vh;
+    max-height: 60vh;
+    background-position: center;
+    background-size: cover;
+}
+.p{
+    color: black;
+}
+.center-container {
+    display: flex;
+    justify-content: center;  /* Horizontally center the content */
+    align-items: center;      /* Vertically center the content */
+    height: 100vh;            /* Make the container take the full height of the viewport */
+    text-align: center;       /* Optional: centers the text inside the h3 */
+    transform: translate(-15%, -10%);  /* Move the container 10% to the left and up */
+  }
+  
+  .center-container h3 {
+    font-size: 3.5rem;  /* Adjust the font size as needed */
+    color:white;
+  }
+  
