@@ -14,28 +14,29 @@ const NavBar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <nav className="bg-gray-900 text-gray-100 fixed w-full z-20 top-0 start-0 shadow-lg">
-      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-4">
-        {/* Logo */}
+    <nav className="bg-gray-900 text-gray-100 fixed w-full z-20 top-0 left-0 shadow-lg">
+      <div className="w-full flex items-center justify-between px-6 py-4">
+        {/* Logo - Align "WeSearch" to the far left */}
         <a href="/" className="flex items-center text-gray-100 space-x-2 text-xl font-semibold">
           <span className="text-3xl text-purple-500 font-bold">WeSearch</span>
         </a>
 
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center space-x-8">
-          <li>
-            <a href="#stories" className="flex items-center space-x-2 hover:text-purple-500">
-              <FaBook className="text-lg" />
-              <span>Stories</span>
-            </a>
-          </li>
-          {/* About Us Dropdown */}
-          <li
-            className="relative"
-            onMouseEnter={() => setDropdownOpen(true)}
-            onMouseLeave={() => setDropdownOpen(false)}
+        {/* Desktop Menu with increased spacing */}
+        <div className="hidden md:flex items-center space-x-6 ml-auto"> {/* Adjusted to space-x-6 for general button spacing */}
+          <a
+            href="#stories"
+            className=" flex items-center space-x-2 hover:text-purple-500"
           >
-            <button className="flex items-center space-x-2 hover:text-purple-500">
+            <FaBook className="text-lg" />
+            <span>Stories</span>
+          </a>
+
+          {/* About Us Dropdown */}
+          <div className="relative">
+            <button
+              className="flex items-center space-x-2 hover:text-purple-500"
+              onClick={() => setDropdownOpen((prev) => !prev)} // Toggle dropdown on click
+            >
               <FaUsers className="text-lg" />
               <span>About Us</span>
               <svg
@@ -65,57 +66,52 @@ const NavBar: React.FC = () => {
                 <a href="#contact-us">Contact Us</a>
               </li>
             </ul>
-          </li>
-          <li>
-            <a
-              href="#researcher"
-              className="flex items-center space-x-2 hover:text-purple-500"
-            >
-              <FaUserTie className="text-lg" />
-              <span>Become a Researcher</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#donate"
-              className="flex items-center space-x-2 hover:text-purple-500"
-            >
-              <FaEnvelope className="text-lg" />
-              <span>Donate</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#volunteer"
-              className="flex items-center space-x-2 hover:text-purple-500"
-            >
-              <FaHandsHelping className="text-lg" />
-              <span>Volunteer</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#partnerships"
-              className="flex items-center space-x-2 hover:text-purple-500"
-            >
-              <FaHandshake className="text-lg" />
-              <span>Partnerships</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#login"
-              className="flex items-center space-x-2 hover:text-purple-500"
-            >
-              <FaSmile className="text-lg" />
-              <span>Login</span>
-            </a>
-          </li>
-        </ul>
+          </div>
 
-        {/* Signup Button */}
+          <a
+            href="#researcher"
+            className="flex items-center space-x-2 hover:text-purple-500"
+          >
+            <FaUserTie className="text-lg" />
+            <span>Become a Researcher</span>
+          </a>
+
+          <a
+            href="#donate"
+            className="flex items-center space-x-2 hover:text-purple-500"
+          >
+            <FaEnvelope className="text-lg" />
+            <span>Donate</span>
+          </a>
+
+          <a
+            href="#volunteer"
+            className="flex items-center space-x-2 hover:text-purple-500"
+          >
+            <FaHandsHelping className="text-lg" />
+            <span>Volunteer</span>
+          </a>
+
+          <a
+            href="#partnerships"
+            className="flex items-center space-x-2 hover:text-purple-500"
+          >
+            <FaHandshake className="text-lg" />
+            <span>Partnerships</span>
+          </a>
+
+          <a
+            href="#login"
+            className="flex items-center space-x-2 hover:text-purple-500 mr-6" 
+          >
+            <FaSmile className="text-lg" />
+            <span>Login</span>
+          </a>
+        </div>
+
+        {/* Sign Up Button with spacing */}
         <button
-          className="hidden md:inline-block text-gray-900 bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-6 py-2 shadow-md transition-all"
+          className="hidden md:inline-block text-white bg-purple-500 hover:bg-purple-600 hover:scale-105 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-6 py-2 shadow-md transition-all ml-6" 
         >
           Sign Up
         </button>
@@ -150,26 +146,3 @@ const NavBar: React.FC = () => {
 };
 
 export default NavBar;
-// import React from "react";
-// import { FaBook, FaInfoCircle, FaUserPlus, FaHeart, FaHandsHelping, FaSignInAlt } from 'react-icons/fa';
-// import './NavBar.css';
-
-// const NavBar = () => {
-//   return (
-//     <header className="header">
-//       <a href="" className="logo">WeSearch</a>
-//       <nav className="navbar">
-//         <a href=""><FaBook /> Stories</a>
-//         <a href=""><FaInfoCircle /> About Us</a>
-//         <a href=""><FaUserPlus /> Become a Researcher</a>
-//         <a href=""><FaHeart /> Donate</a>
-//         <a href=""><FaHandsHelping /> Volunteer</a>
-//         <a href=""><FaSignInAlt /> Login</a>
-//         <a href=""><FaUserPlus /> Sign Up</a>
-//       </nav>
-//     </header>
-//   );
-// }
-
-// export default NavBar;
-
