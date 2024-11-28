@@ -3,71 +3,32 @@
 import Image from "next/image";
 import { useState } from "react";
 import { signIn , SignInResponse } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function SignInForm() {
-  const [email,setEmail]=useState("");
-  const [password,setPassword]=useState("");
-  const [error,setError]=useState("");  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
-    // Run validation explicitly
-    const submission = form.validate();
-  
-    if (!submission.valid) {
-      // If validation fails, display error messages and stop the submission
-      console.log("Validation failed:", submission.errors);
-      setError("Please fix the errors in the form before submitting.");
-      return;
-    }
-  
-    // Proceed with existing logic if validation succeeds
+
     try {
-      console.log("Checking if user exists...");
-      const resUserExists = await fetch('api/userExists', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: submission.data.email }), // Use validated data
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
-  
-      if (!resUserExists.ok) {
-        console.log("Error checking user existence");
-        setError("Error while checking if user exists. Please try again.");
+
+      if (res.error) {
+        setError("Invalid Credentials");
         return;
       }
-  
-      const { user } = await resUserExists.json();
-      if (user) {
-        setError("Email is already in use.");
-        return;
-      }
-  
-      console.log("Registering new user...");
-      const res = await fetch('api/register', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: submission.data.firstName,
-          lastName: submission.data.lastName,
-          email: submission.data.email,
-          password: submission.data.password,
-        }),
-      });
-  
-      if (res.ok) {
-        console.log("Registration successful");
-        e.target.reset(); // Reset the form on success
-      } else {
-        console.log("Error during registration");
-        setError("Registration failed. Please try again.");
-      }
+
+      redirect('/home');
     } catch (error) {
-      console.error("An error occurred:", error);
-      setError("An unexpected error occurred. Please try again.");
+      console.log(error);
     }
   };
     return (
