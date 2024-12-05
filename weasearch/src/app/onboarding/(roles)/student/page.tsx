@@ -3,7 +3,9 @@ import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import { SessionProvider, useSession } from "next-auth/react";
 import { useState } from 'react';
-export default function Example() {
+import { useRouter } from 'next/navigation';
+export default function Student() {
+  const router=useRouter();
   const { data: session } = useSession();
   const [formData, setFormData] = useState({
     linkedIn: '',
@@ -21,7 +23,7 @@ export default function Example() {
     school:'',
     company:'',
     jobTitle:'',
-    role:'student'
+    role:'Student'
   });
   console.log('email :', formData.email);
   const [isReview, setIsReview] = useState(false);
@@ -33,9 +35,29 @@ export default function Example() {
   const handleEdit = () => {
     setIsReview(false); 
   };
-  const register = () => {
-    
-  };
+  const register = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+  
+    try {
+      const res = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "credentials": "same-origin", 
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (res.ok) {
+        console.log("Student created successfully.");
+        router.push("/home");  // Redirect to home or another page
+      } else {
+        console.error("Error creating student.");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };  
   return (
     <SessionProvider>
       <div className='flex flex-col justify-center px-96 bg-gray-500 '>

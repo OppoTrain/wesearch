@@ -1,20 +1,20 @@
 "use client";
 import { useState } from "react";
-import {
-  FaBook,
-  FaUsers,
-  FaUserTie,
-  FaHandshake,
-  FaEnvelope,
-  FaHandsHelping,
-  FaSmile,
-} from "react-icons/fa";
+import { FaBook, FaUsers, FaUserTie, FaHandshake, FaEnvelope, FaHandsHelping, FaSmile } from "react-icons/fa";
+import { useSession, signOut } from "next-auth/react"; // Import the necessary hooks
+import { SessionProvider } from "next-auth/react";
 
 const NavBar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: session } = useSession(); // Get session data
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" }); 
+  };
 
   return (
+    <SessionProvider>
     <nav className="bg-gray-900 text-gray-100 fixed w-full z-20 top-0 left-0 shadow-lg">
       <div className="w-full flex items-center justify-between px-6 py-4">
         <a href="/" className="flex items-center text-gray-100 space-x-2 text-xl font-semibold">
@@ -57,7 +57,7 @@ const NavBar: React.FC = () => {
             </ul>
           </div>
 
-          <a href="#researcher" className="flex items-center space-x-2 hover:text-purple-500">
+          <a href="become-a-researcher" className="flex items-center space-x-2 hover:text-purple-500">
             <FaUserTie className="text-lg" />
             <span>Become a Researcher</span>
           </a>
@@ -77,17 +77,28 @@ const NavBar: React.FC = () => {
             <span>Partnerships</span>
           </a>
 
-          <a href="#login" className="flex items-center space-x-2 hover:text-purple-500 mr-6">
-            <FaSmile className="text-lg" />
-            <span>Login</span>
-          </a>
+          {/* Conditional rendering for login or logout */}
+          {!session ? (
+            <a href="sign-in" className="flex items-center space-x-2 hover:text-purple-500 mr-6">
+              <FaSmile className="text-lg" />
+              <span>Login</span>
+            </a>
+          ) : (
+            <button
+              onClick={handleSignOut}
+              className="flex items-center space-x-2 hover:text-purple-500 mr-6"
+            >
+              <FaSmile className="text-lg" />
+              <span>Sign Out</span>
+            </button>
+          )}
         </div>
 
-        <button
+        <a href="sign-up"
           className="hidden md:inline-block text-white bg-purple-500 hover:bg-purple-600 hover:scale-105 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-6 py-2 shadow-md transition-all ml-6"
         >
           Sign Up
-        </button>
+        </a>
 
         <button
           type="button"
@@ -125,7 +136,7 @@ const NavBar: React.FC = () => {
         className={`${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out md:hidden bg-gray-800 text-gray-100 space-y-4 px-6 py-4 absolute inset-0 top-[70px] left-0 w-full z-20`}
-        style={{ backgroundColor: "#2d2d2d" }} 
+
       >
         <a href="#stories" className="block hover:text-purple-500">
           <FaBook className="inline-block mr-2" />
@@ -156,7 +167,7 @@ const NavBar: React.FC = () => {
             </li>
           </ul>
         </div>
-        <a href="#researcher" className="block hover:text-purple-500">
+        <a href="become-a-researcher" className="block hover:text-purple-500">
           <FaUserTie className="inline-block mr-2" />
           Become a Researcher
         </a>
@@ -172,12 +183,25 @@ const NavBar: React.FC = () => {
           <FaHandshake className="inline-block mr-2" />
           Partnerships
         </a>
-        <a href="#login" className="block hover:text-purple-500">
-          <FaSmile className="inline-block mr-2" />
-          Login
-        </a>
+        {/* Conditional rendering for login or logout in mobile menu */}
+        {!session ? (
+          <a href="sign-in" className="block hover:text-purple-500">
+            <FaSmile className="inline-block mr-2" />
+            Login
+          </a>
+        ) : (
+          <button
+            onClick={handleSignOut}
+            className="block hover:text-purple-500"
+          >
+            <FaSmile className="inline-block mr-2" />
+            Sign Out
+          </button>
+        )}
       </div>
     </nav>
+    </SessionProvider>
+
   );
 };
 

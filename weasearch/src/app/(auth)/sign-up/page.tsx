@@ -1,39 +1,47 @@
-"use client"
-import { login } from "@/app/action";
-import { loginSchema } from "@/app/lib/zod/zodSchemas";
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
+'use client'
+import { useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { signIn,getSession } from "next-auth/react";
 import Image from "next/image";
-import { format } from "path";
-import { useActionState, useState } from "react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export default function SignUpForm() {
+  const router = useRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [lastResult, action] = useActionState(login, undefined);
-  const [form,fields] = useForm({
-    lastResult,
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: loginSchema })
-    },
-    shouldValidate:'onBlur',
-    shouldRevalidate:'onInput'
-  })
-  const handleSubmit = async (e: { preventDefault: () => void; target: any; }) => {
+  const [successMessage, setSuccessMessage] = useState("");
+  // const session = await getServerSession(authOptions);
+  // if (session) {
+  //   redirect("/");
+  // }
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setError("");
 
-    if (!firstName || !lastName || !email || !password) {
-      setError("All fields are necessary");
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      setError("All fields are required.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
 
     try {
-      console.log("Checking if user exists...");
-      const resUserExists = await fetch('api/userExists', {
+      const resUserExists = await fetch("api/userExists", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,17 +50,18 @@ export default function SignUpForm() {
       });
 
       if (!resUserExists.ok) {
-        console.log("Error checking user existence");
-        return;
-      }
-      const { user } = await resUserExists.json();
-      console.log("User found:", user);
-      if (user) {
-        setError("Email is already used.");
+        setError("Error checking user existence.");
         return;
       }
 
-      const res = await fetch('api/register', {
+      const { user } = await resUserExists.json();
+
+      if (user) {
+        setError("Email is already in use.");
+        return;
+      }
+
+      const res = await fetch("api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,17 +70,29 @@ export default function SignUpForm() {
       });
 
       if (res.ok) {
-        console.log("Registration successful");
-        const form = e.target;
-        form.reset();
+        setSuccessMessage("Registration successful. Logging you in...");
+
+        const signInResponse = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (signInResponse?.error) {
+          setError("Error signing in after registration.");
+          return;
+        }
+
+        router.push("/onboarding");
       } else {
-        console.log("Error during registration");
+        setError("An error occurred during registration.");
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("Error during registration:", error);
       setError("An error occurred. Please try again.");
     }
   };
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -86,15 +107,14 @@ export default function SignUpForm() {
             width={32}
             height={32}
           />
-          Flowbite
+          WeSearch
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Create an account
             </h1>
-            {/* <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}> */}
-            <form className="space-y-4 md:space-y-6" onSubmit={form.onSubmit} action={action} id={form.id}>
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="first-name"
@@ -102,17 +122,15 @@ export default function SignUpForm() {
                 >
                   First Name
                 </label>
-                <input onChange={e => setFirstName(e.target.value)}
+                <input
                   type="text"
                   id="first-name"
-                  name={fields.firstName.name}
-                  defaultValue={fields.firstName.initialValue}
-                  key={fields.firstName.key}
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="John"
                   required
                 />
-                <p className="text-red-500 text-sm">{fields.firstName.errors}</p>
               </div>
 
               <div>
@@ -122,17 +140,15 @@ export default function SignUpForm() {
                 >
                   Last Name
                 </label>
-                <input onChange={e => setLastName(e.target.value)}
+                <input
                   type="text"
                   id="last-name"
-                  name={fields.lastName.name}
-                  defaultValue={fields.lastName.initialValue}
-                  key={fields.lastName.key}
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Doe"
                   required
                 />
-                <p className="text-red-500 text-sm">{fields.lastName.errors}</p>
               </div>
 
               <div>
@@ -142,16 +158,15 @@ export default function SignUpForm() {
                 >
                   Your email
                 </label>
-                <input onChange={e => setEmail(e.target.value)}
+                <input
                   type="email"
-                  name={fields.email.name}
-                  defaultValue={fields.email.initialValue}
-                  key={fields.email.key}
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   required
                 />
-                <p className="text-red-500 text-sm">{fields.email.errors}</p>
               </div>
 
               <div>
@@ -161,16 +176,14 @@ export default function SignUpForm() {
                 >
                   Password
                 </label>
-                <input onChange={e => setPassword(e.target.value)}
+                <input
                   type="password"
-                  name={fields.password.name}
-                  defaultValue={fields.password.initialValue}
-                  key={fields.password.key}
-                  placeholder="••••••••"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                 />
-                <p className="text-red-500 text-sm">{fields.password.errors}</p>
               </div>
 
               <div>
@@ -182,41 +195,33 @@ export default function SignUpForm() {
                 </label>
                 <input
                   type="password"
-                  name={fields.confirmPassword?.name}
-                  defaultValue={fields.confirmPassword?.initialValue}
-                  key={fields.confirmPassword?.key}
                   id="confirm-password"
-                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                 />
-                <p className="text-red-500 text-sm">{fields.confirmPassword?.errors}</p>
               </div>
 
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+              {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
+
               <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="terms"
-                    aria-describedby="terms"
-                    type="checkbox"
-                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                    required
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label
-                    htmlFor="terms"
-                    className="font-light text-gray-500 dark:text-gray-300"
+                <input
+                  type="checkbox"
+                  id="terms"
+                  className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                  required
+                />
+                <label htmlFor="terms" className="ml-3 text-sm text-gray-500 dark:text-gray-300">
+                  I accept the{" "}
+                  <a
+                    href="#"
+                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
-                    I accept the{" "}
-                    <a
-                      className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                      href="#"
-                    >
-                      Terms and Conditions
-                    </a>
-                  </label>
-                </div>
+                    Terms and Conditions
+                  </a>
+                </label>
               </div>
 
               <button
@@ -225,12 +230,7 @@ export default function SignUpForm() {
               >
                 Create an account
               </button>
-              {/* {error && (
-                <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-                  <p className="font-medium">Error</p>
-                  <p>{error}</p>
-                </div>
-              )} */}
+
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?{" "}
                 <a
