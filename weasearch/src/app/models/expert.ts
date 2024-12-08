@@ -1,19 +1,18 @@
 import mongoose, { models, Schema } from 'mongoose';
-import User from './user'; 
 
-const researcherSchema = new Schema(
+const expertSchema = new Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     firstName: {
       type: String,
       required: true,
     },
     lastName: {
       type: String,
-      required: true,
-    },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
       required: true,
     },
     linkedinProfile: {
@@ -29,19 +28,23 @@ const researcherSchema = new Schema(
     preferredLanguage: {
       type: String,
     },
-    academicGoals: {
+    expertise: {
+      type: String,
+      enum: ['student', 'career changer', 'junior', 'intermediate', 'advanced', 'senior', 'executive'],
+    },
+    company: {
       type: String,
     },
-    researchMethodologies: {
+    school: {
       type: String,
     },
-    researchInterests: {
+    jobTitle: {
       type: String,
     },
   },
   { timestamps: true }
 );
 
-const Researcher = models.Researcher || mongoose.model('Researcher', researcherSchema);
+const Expert = models.Expert || mongoose.model('Expert', expertSchema);
 
-export default Researcher;
+export default Expert;

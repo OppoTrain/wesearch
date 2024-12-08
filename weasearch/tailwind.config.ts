@@ -12,12 +12,17 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
-      backgroundImage:{
-        bannerImg:"url('/bg.jpg')",
-        blackOverlay: "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%)", // Adjusted opacity
-      }
+      backgroundImage: {
+        bannerImg: "url('/bg.jpg')",
+        blackOverlay:
+          "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%)",
+      },
+      animation: {
+        'spin-slow': 'spin 60s linear infinite',
+      },
     },
   },
   plugins: [],
 };
+
 export default config;

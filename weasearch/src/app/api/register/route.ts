@@ -9,11 +9,11 @@ export async function POST(req: any) {
         const { firstName, lastName, email, password } = data;
         const hashedPassword=await bcrypt.hash(password,10);
         await dbConnect();
-        await User.create({firstName,lastName,email,password:hashedPassword})
+        await User.create({email,password:hashedPassword})
 
         return NextResponse.json({ message: "Sign Up Successful" }, { status: 201 });
     } catch (error) {
-        console.error("Error in POST request:", error); // Log the error for better debugging
+        console.error("Error in POST request:", error); 
         return NextResponse.json({ message: "Error while registering user" }, { status: 500 });
     }
 }

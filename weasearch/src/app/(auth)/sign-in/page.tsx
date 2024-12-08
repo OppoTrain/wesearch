@@ -3,14 +3,15 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { getSession } from "next-auth/react";
 
 export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter(); 
+  const router = useRouter();
+
   useEffect(() => {
     const checkSession = async () => {
       const session = await getSession();
@@ -21,7 +22,6 @@ export default function SignInForm() {
 
     checkSession();
   }, [router]);
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,27 +63,26 @@ export default function SignInForm() {
   };
 
   return (
-    <section className="flex h-screen">
-      {/* Left side: Image */}
-      <div className="w-2/3 bg-gray-500 flex items-center justify-center">
+    <section className="flex h-screen flex-col md:flex-row">
+      <div className="hidden md:flex md:w-2/3 bg-[#14303d] items-center justify-center">
         <Image
-          src="/your-image-path.png" // Replace with your image path
-          alt="Welcome image"
-          width={500}
-          height={500}
-          className="rounded-lg"
+          src="/earth.png"
+          alt="Decorative Globe"
+          width={700}
+          height={700}
+          className="animate-spin-slow rounded-lg"
         />
       </div>
-  
-      <div className="w-1/3 bg-white flex flex-col justify-center px-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+
+      <div className="w-full md:w-1/3 bg-white flex flex-col justify-center px-8 py-12 sm:px-16 sm:py-24">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
           Welcome back
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-6 ">
-          <div className="flex flex-col items-center">
+        <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-10">
+          <div className="flex flex-col">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
             >
               Email address
             </label>
@@ -92,15 +91,15 @@ export default function SignInForm() {
               id="email"
               name="email"
               onChange={(e) => setEmail(e.target.value)}
-              className="block  w-full max-w-sm border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="name@company.com"
+              className="block w-full border border-gray-300 text-black rounded-md shadow-sm py-3 px-4 sm:py-4 sm:px-5 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Email"
               required
             />
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
             >
               Password
             </label>
@@ -109,15 +108,15 @@ export default function SignInForm() {
               id="password"
               name="password"
               onChange={(e) => setPassword(e.target.value)}
-              className="block w-full max-w-sm border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="••••••••"
+              className="block w-full border border-gray-300 text-black rounded-md shadow-sm py-3 px-4 sm:py-4 sm:px-5 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Password"
               required
             />
           </div>
-          <div className="flex justify-center">
+          <div>
             <button
               type="submit"
-              className="w-full max-w-sm bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
+              className="w-full bg-[#14303d] text-white py-3 px-6 sm:py-4 sm:px-8 rounded-md text-base sm:text-lg hover:bg-[#0f2a32]"
             >
               Sign in
             </button>
@@ -125,9 +124,9 @@ export default function SignInForm() {
           {error && (
             <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
           )}
-          <p className="text-sm text-gray-500 mt-4 text-center">
+          <p className="text-sm sm:text-base text-gray-500 mt-6 text-center">
             Don’t have an account?{" "}
-            <a href="#" className="text-indigo-600 hover:underline">
+            <a href="/sign-up" className="text-[#14303d] hover:underline">
               Sign up
             </a>
           </p>
@@ -135,5 +134,4 @@ export default function SignInForm() {
       </div>
     </section>
   );
-  
 }

@@ -2,18 +2,10 @@ import mongoose, { models, Schema } from 'mongoose';
 
 const baseUserSchema = new Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       required: true,
-      unique:true
+      unique: true,
     },
     password: {
       type: String,
@@ -21,21 +13,7 @@ const baseUserSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ['Student', 'Researcher'],
-    },
-    linkedinProfile: {
-      type: String,
-    },
-    bio: {
-      type: String,
-      
-    },
-    gender: {
-      type: String,
-      enum: ['male', 'female'],
-    },
-    preferredLanguage: {
-      type: String,
+      enum: ['Expert', 'Researcher'], 
     },
   },
   { timestamps: true }

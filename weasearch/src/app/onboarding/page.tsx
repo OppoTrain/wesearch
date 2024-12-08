@@ -65,9 +65,9 @@ export default function PageName() {
       </h1>
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12">
         <Card
-          title={"Student"}
-          description="As a student, you’re seeking guidance and mentorship to navigate your educational and career journey."
-          onSelect={() => handleSelectRole("student")}
+          title={"Expert"}
+          description="As a expert, you’re seeking guidance and mentorship to navigate your educational and career journey."
+          onSelect={() => handleSelectRole("expert")}
           icon={<FaUser />}
         />
         <Card

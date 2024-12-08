@@ -4,8 +4,8 @@ import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import { SessionProvider, useSession } from "next-auth/react";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-export default function Student() {
-  const router=useRouter();
+export default function Expert() {
+  const router = useRouter();
   const { data: session } = useSession();
   const [formData, setFormData] = useState({
     linkedIn: '',
@@ -19,56 +19,99 @@ export default function Student() {
     additionalLanguage: '',
     phoneNo: '',
     photo: '',
-    expertise:'',
-    school:'',
-    company:'',
-    jobTitle:'',
-    role:'Student'
+    expertise: '',
+    school: '',
+    company: '',
+    jobTitle: '',
+    role: 'Expert',
+    firstName:'',
+    lastName:''
   });
   console.log('email :', formData.email);
   const [isReview, setIsReview] = useState(false);
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setIsReview(true); 
+    setIsReview(true);
   };
 
   const handleEdit = () => {
-    setIsReview(false); 
+    setIsReview(false);
   };
   const register = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-  
+
     try {
       const res = await fetch("/api/onboarding", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "credentials": "same-origin", 
+          "credentials": "same-origin",
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (res.ok) {
-        console.log("Student created successfully.");
-        router.push("/home");  // Redirect to home or another page
+        console.log("Expert created successfully.");
+        router.push("/home");
       } else {
-        console.error("Error creating student.");
+        console.error("Error creating expert.");
       }
     } catch (error) {
       console.error("An error occurred:", error);
     }
-  };  
+  };
   return (
     <SessionProvider>
       <div className='flex flex-col justify-center px-96 bg-gray-500 '>
-        {!isReview? (<form className='bg-white px-16 mt-16 ' onSubmit={handleSubmit}>
+        {!isReview ? (<form className='bg-white px-16 mt-16 ' onSubmit={handleSubmit}>
           <div className="space-y-12">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="font-semibold text-gray-900 mt-12 text-3xl">Basic Information</h2>
               <p className="mt-1text-xl text-gray-600">
                 This information will be displayed publicly so be careful what you share.
               </p>
-              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div className="sm:col-span-3 sm:col-start-1">
+                  <label htmlFor="first-name" className="blocktext-xl font-bold text-gray-900">
+                    First Name
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      onChange={e =>
+                        setFormData(prevState => ({
+                          ...prevState,
+                          firstName: e.target.value
+                        }))
+                      }
+                      id="first-name"
+                      name="first-name"
+                      type="text"
+                      autoComplete="given-name"
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:col-span-3 sm:col-start-4">
+                  <label htmlFor="last-name" className="blocktext-xl font-bold text-gray-900">
+                    Last Name
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      onChange={e =>
+                        setFormData(prevState => ({
+                          ...prevState,
+                          lastName: e.target.value
+                        }))
+                      }
+                      id="last-name"
+                      name="last-name"
+                      type="text"
+                      autoComplete="family-name"
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+                    />
+                  </div>
+                </div>
                 <div className="sm:col-span-4">
                   <label htmlFor="linked-in" className="blocktext-xl font-bold text-gray-900">
                     LINKEDIN PROFILE URL
@@ -95,10 +138,10 @@ export default function Student() {
                   </label>
                   <div className="mt-2">
                     <textarea
-                     onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      bio: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        bio: e.target.value
+                      }))}
                       id="bio"
                       name="bio"
                       rows={3}
@@ -131,10 +174,10 @@ export default function Student() {
                   </label>
                   <div className="mt-2 grid grid-cols-1">
                     <select
-                    onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      gender: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        gender: e.target.value
+                      }))}
                       id="gender"
                       name="gender"
                       className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -156,10 +199,10 @@ export default function Student() {
                   </label>
                   <div className="mt-2 grid grid-cols-1">
                     <select
-                    onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      language: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        language: e.target.value
+                      }))}
                       id="language"
                       name="language"
                       autoComplete="language"
@@ -256,10 +299,10 @@ export default function Student() {
                     <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                       <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6"></div>
                       <input
-                      onChange={e => setFormData(prevState => ({
-                        ...prevState,
-                        additionalLanguage: e.target.value
-                      }))}
+                        onChange={e => setFormData(prevState => ({
+                          ...prevState,
+                          additionalLanguage: e.target.value
+                        }))}
                         id="additional-languages"
                         name="additional-languages"
                         type="text"
@@ -315,10 +358,10 @@ export default function Student() {
                   </label>
                   <div className="mt-2 grid grid-cols-1">
                     <select
-                    onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      country: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        country: e.target.value
+                      }))}
                       id="country"
                       name="country"
                       autoComplete="country-name"
@@ -581,10 +624,10 @@ export default function Student() {
 
                   <div className="mt-2">
                     <input
-                    onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      phoneNo: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        phoneNo: e.target.value
+                      }))}
                       id="phone-no"
                       name="phone-no"
                       type="text"
@@ -600,14 +643,14 @@ export default function Student() {
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div className="sm:col-span-3">
                   <label htmlFor="country" className="blocktext-xl font-medium text-gray-900">
-                  EXPERIENCE LEVEL *
+                    EXPERIENCE LEVEL *
                   </label>
                   <div className="mt-2 grid grid-cols-1">
                     <select
-                    onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      expertise: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        expertise: e.target.value
+                      }))}
                       id="country"
                       name="country"
                       autoComplete="country-name"
@@ -635,10 +678,10 @@ export default function Student() {
 
                   <div className="mt-2">
                     <input
-                    onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      school: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        school: e.target.value
+                      }))}
                       id="phone-no"
                       name="phone-no"
                       type="text"
@@ -649,15 +692,15 @@ export default function Student() {
                 </div>
                 <div className="sm:col-span-2 sm:col-start-1">
                   <label htmlFor="phone-no" className="blocktext-xl font-medium text-gray-900">
-                  CURRENT COMPANY
+                    CURRENT COMPANY
                   </label>
 
                   <div className="mt-2">
                     <input
-                    onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      company: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        company: e.target.value
+                      }))}
                       id="phone-no"
                       name="phone-no"
                       type="text"
@@ -668,15 +711,15 @@ export default function Student() {
                 </div>
                 <div className="sm:col-span-2 sm:col-start-1">
                   <label htmlFor="phone-no" className="blocktext-xl font-medium text-gray-900">
-                  CURRENT JOB TITLE
+                    CURRENT JOB TITLE
                   </label>
 
                   <div className="mt-2">
                     <input
-                    onChange={e => setFormData(prevState => ({
-                      ...prevState,
-                      jobTitle: e.target.value
-                    }))}
+                      onChange={e => setFormData(prevState => ({
+                        ...prevState,
+                        jobTitle: e.target.value
+                      }))}
                       id="phone-no"
                       name="phone-no"
                       type="text"
@@ -697,51 +740,53 @@ export default function Student() {
               Next
             </button>
           </div>
-        </form>):
-        (
-          <div className="bg-white px-16 mt-16 text-black">
-            <h2 className="font-semibold text-gray-900 mt-12 text-3xl">Review</h2>
-            <div className="mt-10 space-y-6">
-              <div>
-                <h3 className="font-semibold text-lg text-gray-800 mb-6">About You</h3>
-                <p >LinkedIn: {formData.linkedIn}</p>
-                <p className='mt-2'>Bio: {formData.bio}</p>
-                <p className='mt-2'>Gender: {formData.gender}</p>
-                <p className='mt-2'>Preferred Language: {formData.language}</p>
+        </form>) :
+          (
+            <div className="bg-white px-16 mt-16 text-black">
+              <h2 className="font-semibold text-gray-900 mt-12 text-3xl">Review</h2>
+              <div className="mt-10 space-y-6">
+                <div>
+                  <h3 className="font-semibold text-lg text-gray-800 mb-6">About You</h3>
+                  <p >First Name: {formData.firstName}</p>
+                  <p className='mt-2'>Last Name: {formData.lastName}</p>
+                  <p className='mt-2'>LinkedIn: {formData.linkedIn}</p>
+                  <p className='mt-2'>Bio: {formData.bio}</p>
+                  <p className='mt-2'>Gender: {formData.gender}</p>
+                  <p className='mt-2'>Preferred Language: {formData.language}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg text-gray-800 mb-6">Contact Information</h3>
+                  <p >Email: {formData.email}</p>
+                  <p className='mt-2'>Phone: {formData.phoneNo || "Not provided"}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg text-gray-800 mb-6">Professional Experience</h3>
+                  <p >Expertise: {formData.expertise || "Not provided"}</p>
+                  <p className='mt-2'>School: {formData.school || "Not provided"}</p>
+                  <p className='mt-2'>Company: {formData.company || "Not provided"}</p>
+                  <p className='mt-2'>Job Title: {formData.jobTitle || "Not provided"}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg text-gray-800 mb-6">Contact Information</h3>
-                <p >Email: {formData.email}</p>
-                <p className='mt-2'>Phone: {formData.phoneNo || "Not provided"}</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg text-gray-800 mb-6">Professional Experience</h3>
-                <p >Expertise: {formData.expertise || "Not provided"}</p>
-                <p className='mt-2'>School: {formData.school || "Not provided"}</p>
-                <p className='mt-2'>Company: {formData.company || "Not provided"}</p>
-                <p className='mt-2'>Job Title: {formData.jobTitle || "Not provided"}</p>
-              </div>
-            </div>
 
-            <div className="mt-12 flex items-center justify-center gap-x-6 mb-14">
-              <button
-                type="button"
-                onClick={handleEdit}
-                className="rounded-md bg-gray-300 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-gray-400"
-              >
-                Edit
-              </button>
-              <button
-              type="submit"
-              onClick={register}
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Submit
-            </button>
+              <div className="mt-12 flex items-center justify-center gap-x-6 mb-14">
+                <button
+                  type="button"
+                  onClick={handleEdit}
+                  className="rounded-md bg-gray-300 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:bg-gray-400"
+                >
+                  Edit
+                </button>
+                <button
+                  type="submit"
+                  onClick={register}
+                  className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Submit
+                </button>
+              </div>
+
             </div>
-            
-          </div>
-        )
+          )
         }
       </div>
     </SessionProvider>

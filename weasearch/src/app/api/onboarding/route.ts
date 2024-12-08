@@ -1,6 +1,6 @@
 import { dbConnect } from "@/app/lib/mongo/db";
-import Student from "@/app/models/student";
-import Researcher from "@/app/models/researcher";  // Import Researcher model
+import Expert from "@/app/models/expert";
+import Researcher from "@/app/models/researcher";
 import User from "@/app/models/user";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
@@ -31,10 +31,12 @@ export async function POST(req: Request) {
       school,
       company,
       jobTitle,
-      role,  // Include role in request body
+      role, 
       academicGoals,
       researchMethodologies,
       researchInterests,
+      firstName,
+      lastName
     } = await req.json();
 
     await dbConnect();
@@ -43,31 +45,29 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    const existingStudent = await Student.findOne({ email });
-    const existingResearcher = await Researcher.findOne({ email });  // Check if researcher exists
+    const existingExpert = await Expert.findOne({ userId: existingUser._id });
+    const existingResearcher = await Researcher.findOne({ userId: existingUser._id });
 
-    if (existingStudent || existingResearcher) {
-      return NextResponse.json({ message: "User already exists in either Student or Researcher" }, { status: 400 });
+    if (existingExpert || existingResearcher) {
+      return NextResponse.json({ message: "User already has an associated profile" }, { status: 400 });
     }
 
-    const deleteResult = await User.deleteOne({ email });
-    if (deleteResult.deletedCount === 0) {
-      return NextResponse.json({ message: "Failed to delete user" }, { status: 500 });
-    }
-    if (role === "Student") {
-      const student = await Student.create({
+    await User.findOneAndUpdate(
+      { email },
+      { role: role }, 
+      { new: true }
+    );
+
+    if (role === "Expert") {
+      const expert = await Expert.create({
         userId: existingUser._id,
-        email,
-        firstName: existingUser.firstName,
-        lastName: existingUser.lastName,
-        password: existingUser.password,
-        linkedIn,
-        bio,
-        gender,
+        linkedIn: existingUser.linkedinProfile || linkedIn,
+        bio: existingUser.bio || bio,
+        gender: existingUser.gender || gender,
         streetAddress,
         city,
         state,
-        language,
+        language: existingUser.preferredLanguage || language,
         additionalLanguage,
         phoneNo,
         photo,
@@ -75,23 +75,21 @@ export async function POST(req: Request) {
         school,
         company,
         jobTitle,
-        role: 'Student',
+        firstName,
+        lastName,
+        role: 'Expert',
       });
-      return NextResponse.json({ message: "Student profile created and user deleted", student });
+      return NextResponse.json({ message: "Expert profile created", expert });
     } else if (role === "Researcher") {
       const researcher = await Researcher.create({
         userId: existingUser._id,
-        email,
-        firstName: existingUser.firstName,
-        lastName: existingUser.lastName,
-        password: existingUser.password,
-        linkedIn,
-        bio,
-        gender,
+        linkedIn: existingUser.linkedinProfile || linkedIn,
+        bio: existingUser.bio || bio,
+        gender: existingUser.gender || gender,
         streetAddress,
         city,
         state,
-        language,
+        language: existingUser.preferredLanguage || language,
         additionalLanguage,
         phoneNo,
         photo,
@@ -104,7 +102,7 @@ export async function POST(req: Request) {
         researchInterests,
         role: 'Researcher',
       });
-      return NextResponse.json({ message: "Researcher profile created and user deleted", researcher });
+      return NextResponse.json({ message: "Researcher profile created", researcher });
     } else {
       return NextResponse.json({ message: "Invalid role" }, { status: 400 });
     }
