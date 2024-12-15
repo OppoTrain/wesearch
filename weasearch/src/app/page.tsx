@@ -3,7 +3,7 @@ import { FaGlobe, FaUsers, FaBalanceScale, FaCheckCircle, FaHandshake } from "re
 import HomePageCard from "./components/Card";
 import { SessionProvider } from "next-auth/react";
 import { useSession } from "next-auth/react";
-
+import NewsLetter from "./components/NewsLetter";
 export default function HomePage() {
   const cards = [
     {
@@ -54,7 +54,6 @@ export default function HomePage() {
 </section>
 
 
-      {/* Cards Section */}
       <section className="flex justify-center items-center h-auto bg-blue-100 py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mx-4">
           {cards.map((card, index) => (
@@ -63,7 +62,6 @@ export default function HomePage() {
         </div>
       </section>
 
-       {/* Discover and Connect Section */}
        <div className="grid bg-white h-[52vh]">
         <div className="grid grid-cols-1 sm:grid-cols-2">
           <div className="bg-gradient-to-r from-blue-100 via-purple-400 to-gray-400 flex justify-center items-center">
@@ -84,7 +82,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* What Makes Us Different Section */}
       <div className="bg-gray-50 py-20 px-8">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-800 mb-12 font-sans">
@@ -139,7 +136,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Contribute to Research Section */}
       <div className="relative grid bg-[url('/research.webp')] bg-cover bg-center h-[52vh]">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent opacity-40"></div>
         <div className="grid grid-cols-1 sm:grid-cols-2 w-full h-full">
@@ -159,8 +155,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
-      {/* Collaborate with Us Section */}
       <section className="bg-white py-20">
         <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between px-8 space-y-10 sm:space-y-0">
           <div className="flex-1 flex justify-center">
