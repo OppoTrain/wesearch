@@ -5,6 +5,9 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "./Providers";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css'; 
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
