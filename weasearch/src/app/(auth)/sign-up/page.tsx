@@ -3,7 +3,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSession, signIn } from "next-auth/react";
-
+import { FcGoogle } from "react-icons/fc";
+import { FaLinkedinIn } from "react-icons/fa6";
 export default function SignUpForm() {
   const router = useRouter();
   // const [firstName, setFirstName] = useState("");
@@ -44,7 +45,7 @@ export default function SignUpForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({  email, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (res.ok) {
@@ -77,47 +78,8 @@ export default function SignUpForm() {
           Create an account
         </h1>
         <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-10">
-          {/* <div className="flex flex-col">
-            <label
-              htmlFor="first-name"
-              className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
-            >
-              First Name
-            </label>
-            <input
-              type="text"
-              id="first-name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="block w-full border border-gray-300 text-black rounded-md shadow-sm py-3 px-4 sm:py-4 sm:px-5 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="John"
-              required
-            />
-          </div>
-
           <div className="flex flex-col">
-            <label
-              htmlFor="last-name"
-              className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
-            >
-              Last Name
-            </label>
-            <input
-              type="text"
-              id="last-name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="block w-full border border-gray-300 text-black rounded-md shadow-sm py-3 px-4 sm:py-4 sm:px-5 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Doe"
-              required
-            />
-          </div> */}
-
-          <div className="flex flex-col">
-            <label
-              htmlFor="email"
-              className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
-            >
+            <label htmlFor="email" className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
               Email
             </label>
             <input
@@ -132,10 +94,7 @@ export default function SignUpForm() {
           </div>
 
           <div className="flex flex-col">
-            <label
-              htmlFor="password"
-              className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
-            >
+            <label htmlFor="password" className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
               Password
             </label>
             <input
@@ -150,10 +109,7 @@ export default function SignUpForm() {
           </div>
 
           <div className="flex flex-col">
-            <label
-              htmlFor="confirm-password"
-              className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
-            >
+            <label htmlFor="confirm-password" className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
               Confirm Password
             </label>
             <input
@@ -168,26 +124,45 @@ export default function SignUpForm() {
           </div>
 
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-          {successMessage && (
-            <p className="text-green-500 text-sm text-center">
-              {successMessage}
-            </p>
-          )}
+          {successMessage && <p className="text-green-500 text-sm text-center">{successMessage}</p>}
 
           <button
             type="submit"
-            className="w-full bg-[#14303d] text-white py-3 px-6 sm:py-4 sm:px-8 rounded-md text-base sm:text-lg hover:bg-[#0f2a32]"
+            className="w-full bg-[#14303d] text-white py-3 px-6 sm:py-4 sm:px-8 rounded-md text-base sm:text-lg hover:bg-[#0f2a32] flex items-center justify-center space-x-2"
           >
-            Sign up
+            <span>Sign up</span>
           </button>
 
-          <p className="text-sm sm:text-base text-gray-500 mt-6 text-center">
-            Already have an account?{" "}
-            <a href="/sign-in" className="text-[#14303d] hover:underline">
-              Login
-            </a>
-          </p>
+          <div className="flex items-center justify-center space-x-2 ">
+            <span className="text-gray-500">or</span>
+          </div>
+
+          <div className="flex flex-col space-y-4">
+            <button
+              type="button"
+              className="w-full text-black bg-white border border-gray-300 rounded-md shadow-sm py-3 px-6 flex items-center justify-center space-x-2 hover:bg-[#0f2a32] hover:text-white"
+            >
+        <FcGoogle className="h-6 w-6"/>
+        <span>Sign up with Google</span>
+            </button>
+
+            <button
+              type="button"
+              className="w-full text-black bg-white border border-gray-300 rounded-md shadow-sm py-3 px-6 flex items-center justify-center space-x-2 hover:bg-[#0f2a32] hover:text-white"
+            >
+              <FaLinkedinIn className="text-blue-700 h-6 w-6 mb-1"/>
+              <span>Sign up with LinkedIn</span>
+            </button>
+          </div>
+
+          <div className="mt-6 text-sm sm:text-base text-gray-500 text-center">
+            <p>By signing up, you agree to our <a href="/terms-of-service" className="text-[#14303d] hover:underline">Terms of Service</a>, our <a href="/privacy-policy" className="text-[#14303d] hover:underline">Privacy Policy</a>, and our <a href="/code-of-conduct" className="text-[#14303d] hover:underline">Code of Conduct</a>.</p>
+            <p>Already have an account? <a href="/sign-in" className="text-[#14303d] hover:underline">Login</a></p>
+          </div>
         </form>
+
+
+
       </div>
     </section>
   );

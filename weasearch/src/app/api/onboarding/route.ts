@@ -100,6 +100,8 @@ export async function POST(req: Request) {
         academicGoals,
         researchMethodologies,
         researchInterests,
+        firstName,
+        lastName,
         role: 'Researcher',
       });
       return NextResponse.json({ message: "Researcher profile created", researcher });

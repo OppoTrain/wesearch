@@ -30,13 +30,7 @@ export default function PageName() {
         });
 
         const user = await response.json();
-        if (response.status !== 200 || !user) {
-          console.error("Error fetching user role");
-          router.push("/sign-in");
-          return;
-        }
 
-        // Redirect if the user already has a role
         if (user.role) {
           router.push("/");
         }
@@ -55,12 +49,14 @@ export default function PageName() {
   };
 
   if (status === "loading") {
-    return <div>Loading...</div>; // Show a loading indicator while the session is being checked
+    return <div>Loading...</div>; 
   }
 
   return (
-    <div className="h-[100vh] bg-gray-500 flex flex-col items-center">
-      <h1 className="text-white text-4xl mt-40 font-serif uppercase">
+  <div className="h-[100vh] bg-[#0F4547] flex flex-col items-center">
+       <div className="absolute w-10/12 h-8 bg-white"></div>
+
+      <h1 className="text-white text-4xl mt-20 font-serif uppercase font-bold">
         Select Your Role
       </h1>
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12">
