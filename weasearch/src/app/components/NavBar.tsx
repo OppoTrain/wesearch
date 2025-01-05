@@ -28,7 +28,7 @@ const NavBar: React.FC = () => {
             </a>
             <div className="relative">
               <button
-                className="flex items-center space-x-2 hover:text-purple-500"
+                className="flex items-center space-x-2 hover:text-purple-500 z-20"
                 onClick={() => setDropdownOpen((prev) => !prev)}
               >
                 <FaUsers className="text-lg" />
@@ -46,7 +46,7 @@ const NavBar: React.FC = () => {
               </button>
               <ul
                 className={`absolute mt-2 bg-gray-900 rounded-lg shadow-md text-sm text-gray-100 ${
-                  dropdownOpen ? "block" : "hidden"
+                  dropdownOpen ? "block z-40" : "hidden"
                 }`}
               >
                 <li className="px-4 py-2 hover:bg-gray-700">
@@ -119,8 +119,66 @@ const NavBar: React.FC = () => {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-gray-800 text-gray-100 p-4">
-            {/* Add mobile menu items */}
+          <div className="lg:hidden z-10 bg-gray-800 text-gray-100 p-4">
+            <a href="blogs" className="flex items-center space-x-2 py-2 hover:text-purple-500">
+              <FaBook className="text-lg" />
+              <span>Stories</span>
+            </a>
+            <div className="relative">
+              <button
+                className="flex items-center space-x-2 py-2 hover:text-purple-500"
+                onClick={() => setDropdownOpen((prev) => !prev)}
+              >
+                <FaUsers className="text-lg" />
+                <span>About Us</span>
+              </button>
+              {dropdownOpen && (
+                <ul className="text-sm text-gray-100 bg-gray-900 p-2 rounded-lg">
+                  <li className="px-4 py-2 hover:bg-gray-700">
+                    <a href="our-team">Our Team</a>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-700">
+                    <a href="about-us">Contact Us</a>
+                  </li>
+                </ul>
+              )}
+            </div>
+            <a href="become-a-researcher" className="flex items-center space-x-2 py-2 hover:text-purple-500">
+              <FaUserTie className="text-lg" />
+              <span>Become a Researcher</span>
+            </a>
+            <a href="#donate" className="flex items-center space-x-2 py-2 hover:text-purple-500">
+              <FaEnvelope className="text-lg" />
+              <span>Donate</span>
+            </a>
+            <a href="/volunteer" className="flex items-center space-x-2 py-2 hover:text-purple-500">
+              <FaHandsHelping className="text-lg" />
+              <span>Volunteer</span>
+            </a>
+            <a href="/partnerships" className="flex items-center space-x-2 py-2 hover:text-purple-500">
+              <FaHandshake className="text-lg" />
+              <span>Partnerships</span>
+            </a>
+            {!session ? (
+              <a href="sign-in" className="flex items-center space-x-2 py-2 hover:text-purple-500">
+                <FaSmile className="text-lg" />
+                <span>Login</span>
+              </a>
+            ) : (
+              <button
+                onClick={handleSignOut}
+                className="flex items-center space-x-2 py-2 hover:text-purple-500"
+              >
+                <FaSmile className="text-lg" />
+                <span>Sign Out</span>
+              </button>
+            )}
+            <a
+              href="sign-up"
+              className="block mt-4 text-white bg-purple-500 hover:bg-purple-600 hover:scale-105 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-6 py-2 shadow-md transition-all"
+            >
+              Sign Up
+            </a>
           </div>
         )}
       </nav>

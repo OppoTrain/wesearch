@@ -1,8 +1,7 @@
 export default function AboutUs() {
   return (
     <div>
-      {/* Hero Section */}
-      <div className="relative flex py-12 text-black h-[66vh] justify-center bg-[url('/image-1.png')] bg-cover bg-[right_-40%_top_-10%]">
+      <div className="relative flex py-12 text-black h-[66vh] justify-center md:bg-[url('/image-1.png')] bg-[url('/tree-mobile.jpg')] bg-cover xl:bg-[right_-40%_top_-10%]">
         <div className="px-6 sm:px-12 md:px-40 lg:px-72">
           <div className="text-center sm:text-left mt-12 sm:mt-28">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans">About Us</h1>
@@ -20,7 +19,6 @@ export default function AboutUs() {
 
 
 
-      {/* What We Do Section */}
       <div className="h-auto flex px-6 sm:px-12 md:px-40 py-20 flex-col md:flex-row">
         <div className="w-full md:w-7/12 pr-10 mb-10 md:mb-0">
           <h1 className="text-3xl sm:text-4xl text-gray-600 font-semibold font-sans mb-6">What we do</h1>
