@@ -1,0 +1,24 @@
+/* body {
+    background: url(../../../public/bg.jpg) no-repeat;
+    min-height: 50vh;
+    max-height: 60vh;
+    background-position: center;
+    background-size: cover;
+}
+.p{
+    color: black;
+}
+.center-container {
+    display: flex;
+    justify-content: center;  
+    align-items: center;      
+    height: 100vh;            
+    text-align: center;      
+    transform: translate(-15%, -10%); 
+  }
+  
+  .center-container h3 {
+    font-size: 3.5rem;  
+    color:white;
+  }
+   */
